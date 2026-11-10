@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070708" />
+    <meta
+      name="description"
+      content="Hush is a focus instrument. Hold the key, and the noise disappears."
+    />
+    <title>Hush — Make room for one thing.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="page">
+      <div class="grain" aria-hidden="true"></div>
+
+      <header class="nav">
+        <a class="brand" href="/" aria-label="Hush home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Hush</span>
+        </a>
+        <div class="nav-actions">
+          <button
+            class="sound"
+            id="sound"
+            type="button"
+            aria-label="Mute sound"
+            aria-pressed="false"
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M3 8v4h3l4 3V5L6 8z" />
+              <path
+                class="wave"
+                d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.5 6.5 0 0 1 0 9"
+                fill="none"
+              />
+              <path class="slash" d="m13.5 8 4 4m0-4-4 4" fill="none" />
+            </svg>
+          </button>
+          <a class="nav-link" href="#footer">Concept</a>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="intro">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>A focus instrument</p>
+          <h1 id="headline">Make room for <em>one thing.</em></h1>
+          <p class="subcopy" id="subcopy">Notifications are noise. Hold to focus.</p>
+        </div>
+
+        <div class="stage" id="stage">
+          <canvas id="scene" aria-hidden="true"></canvas>
+          <div class="chips" id="chips" aria-hidden="true"></div>
+          <div class="orb-caption" id="orb-caption" aria-hidden="true">
+            <span class="orb-dot"></span><span id="orb-state">noise</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button
+            class="keycap"
+            id="keycap"
+            type="button"
+            aria-label="Hold to focus"
+            aria-pressed="false"
+          >
+            <span class="keycap-glow" aria-hidden="true"></span>
+            <span class="keycap-well" aria-hidden="true"></span>
+            <span class="keycap-cap" aria-hidden="true">
+              <span class="keycap-top">
+                <span class="keycap-label">space</span>
+                <span class="keycap-led"></span>
+              </span>
+              <span class="keycap-hint">hold to focus</span>
+            </span>
+          </button>
+
+          <div class="readout" aria-live="off">
+            <span class="readout-time" id="readout">0.0</span>
+            <span class="readout-unit">seconds of focus</span>
+          </div>
+
+          <div class="cta" id="cta" hidden>
+            <button class="cta-button" id="cta-button" type="button">Go again</button>
+            <span class="cta-note">The real app would start a 25-minute session.</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer" id="footer">
+        <span>Hush / Prototype 01</span>
+        <span class="footer-hint">hold <kbd>space</kbd> or press and hold</span>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
