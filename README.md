@@ -1,5 +1,7 @@
 # Hush — a focus instrument (prototype)
 
+**Live demo:** https://jimmerioles.github.io/hush/
+
 ![Hush idle](docs/idle.webp)
 
 Hush is a one-screen interactive hero: a grainy orb, a swarm of notifications, and one gesture.
