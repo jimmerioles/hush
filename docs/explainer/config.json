@@ -1,0 +1,33 @@
+{
+  "kit": "1.1.0",
+  "title": "Hush: a focus instrument, explained",
+  "slug": "hush",
+  "targetSeconds": 195,
+  "theme": {
+    "chrome": {
+      "left": "HUSH",
+      "center": "A FOCUS INSTRUMENT",
+      "right": "PROTOTYPE NO. 01"
+    }
+  },
+  "voice": {
+    "engine": "kokoro",
+    "name": "af_heart",
+    "fallback": "af_bella"
+  },
+  "mix": {
+    "bed": "music.m4a"
+  },
+  "capture": {
+    "url": "http://127.0.0.1:5173/?test",
+    "selector": "#stage",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    }
+  },
+  "verify": {
+    "frameAt": 152,
+    "golden": "golden/frame.png"
+  }
+}

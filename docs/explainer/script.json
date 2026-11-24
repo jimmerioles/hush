@@ -1,0 +1,113 @@
+{
+  "title": "Hush: a focus instrument, explained",
+  "segments": [
+    {
+      "id": "intro",
+      "title": "The hold",
+      "sentences": [
+        "This page is loud. Not with sound, but with other people's urgency.",
+        "Eight notifications drift around a grainy orb, each one asking for a piece of you.",
+        "There is one control. A key, held for twelve seconds.",
+        "This is Hush, and the whole product is the hold."
+      ],
+      "notes": "Cold open on the real page. One control, one gesture, twelve seconds. Name the product by the fourth line."
+    },
+    {
+      "id": "noise",
+      "title": "The noise",
+      "sentences": [
+        "Each notification is a chip with its own orbit, its own speed, its own drift.",
+        "None of them line up. A feed is not a list, it is a field of small pulls.",
+        "The orb in the middle is noise too: a texture of random grey, going nowhere."
+      ],
+      "notes": "Eight real chips on their real orbits. The noise orb is the actual 256px texture, clipped to a circle."
+    },
+    {
+      "id": "gesture",
+      "title": "One gesture",
+      "sentences": [
+        "The gesture is a press and hold.",
+        "Space on the keyboard, or the keycap itself. The page listens for both.",
+        "The moment you press down, it starts counting. The moment you let go, it stops."
+      ],
+      "notes": "The keycap, drawn at scale. Two input paths converge on beginHold. The state machine stays idle until the press."
+    },
+    {
+      "id": "pull",
+      "title": "The pull",
+      "sentences": [
+        "Focus is a number here, and it climbs from zero to one over twelve seconds.",
+        "Each chip has its own delay, so the pull arrives in waves.",
+        "As the number rises, every orbit tightens and every chip shrinks.",
+        "The noise is not deleted. It is drawn inward."
+      ],
+      "notes": "The real formula: local = (p - delay) / (1 - delay), pull = smoothstep(local), orbit += pull * 3.4, scale = 1 - pull * 0.88."
+    },
+    {
+      "id": "return",
+      "title": "It comes back",
+      "sentences": [
+        "At the end of the spiral, a chip crosses a threshold and is absorbed.",
+        "It leaves a burst of particles and a chime, panned to the side it came from.",
+        "A second later, a new chip arrives.",
+        "The noise always comes back. That is the honest part."
+      ],
+      "notes": "One chip's lifecycle on a loop. 14 particles per absorption, five chime notes, pan from -0.7 to 0.7, respawn in 1.2 to 2.8s."
+    },
+    {
+      "id": "static",
+      "title": "The static",
+      "sentences": [
+        "Look at the orb.",
+        "It is a two hundred and fifty six pixel square of random grey, drawn inside a circle.",
+        "As focus rises, the noise falls from thirty two percent opacity to about five.",
+        "Underneath it, a mint glow fades in."
+      ],
+      "notes": "Square noise texture, circular clip, drift offset. Alpha 0.32 * (1 - 0.85f) goes from 0.32 to 0.048. Split orb at f=0 and f=1."
+    },
+    {
+      "id": "clock",
+      "title": "The clock",
+      "sentences": [
+        "The ring is the clock.",
+        "It fills once over twelve seconds, with a bright tip at the exact moment.",
+        "The copy changes with it: stay with it, almost quiet, don't let go.",
+        "One variable drives the ring, the words and the readout below."
+      ],
+      "notes": "Big ring, filling. Three copy bands at 0.34 and 0.70. Readout counts 0.0 to 12.0."
+    },
+    {
+      "id": "leak",
+      "title": "The leak",
+      "sentences": [
+        "Now let go early.",
+        "The progress does not pause. It drains about ten times faster than it filled.",
+        "Twelve seconds to reach the quiet. About one and a fifth to lose it.",
+        "Focus is not a state you enter. It is something you keep choosing."
+      ],
+      "notes": "The thesis. Fill slope 1/12 per second, drain 0.85 per second. 12.0s up, 1.18s down. Plot both over 26 seconds."
+    },
+    {
+      "id": "quiet",
+      "title": "The quiet",
+      "sentences": [
+        "Hold to the end, and the page blooms.",
+        "A hundred and twenty particles, a four note chord, and one line: it's quiet now.",
+        "The small urgencies are gone.",
+        "With reduced motion, the particles stop and the bloom simplifies. The quiet still arrives."
+      ],
+      "notes": "The payoff frame. Bloom particles, A major chord A3 C#4 E4 A4, reduced-motion variant beside it."
+    },
+    {
+      "id": "close",
+      "title": "One page",
+      "sentences": [
+        "Hush is one page of TypeScript, Canvas and Web Audio.",
+        "The orb is drawn, the chips are DOM elements, the sound is synthesized on the spot.",
+        "No images, no audio files, no backend.",
+        "Hold the key. That is the whole product."
+      ],
+      "notes": "Three files, three layers. Close on the keycap and the smallest true sentence in the film."
+    }
+  ]
+}

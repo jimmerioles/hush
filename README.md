@@ -12,6 +12,16 @@ The interaction is the product demo: focus is not a toggle, it is something you 
 
 ![Hush focusing](docs/focus.webp)
 
+## The explainer
+
+[![Hush, explained: a 3:14 film about holding focus](docs/explainer/poster.jpg)](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4)
+
+**3:14 · 1920 × 1080 · narrated by Kokoro `af_heart`**
+
+A ten-chapter film in the 3Blue1Brown style: one held key, eight notifications, twelve seconds, and the 1.18-second leak that makes the gesture mean something. Every frame uses real captures of this prototype and the actual constants in `src/main.ts` and `src/audio.ts`.
+
+[Watch the film](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4) · [Chapters and credits](docs/explainer/README.md)
+
 ## Run it
 
 ```bash
