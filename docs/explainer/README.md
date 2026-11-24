@@ -2,7 +2,7 @@
 
 **Watch:** [hush-explained.mp4](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4) (3:14, 58 MB)
 
-[![Hush, explained](poster.jpg)](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4)
+[![Hush, explained](poster-watch.jpg)](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4)
 
 A ten-chapter film about Hush, a focus instrument you hold. It follows one held key from noise to quiet, then asks what happens when you let go.
 
