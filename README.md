@@ -1,10 +1,18 @@
-# Hush
-
-A focus instrument you hold.
-
-[Live demo](https://jimmerioles.github.io/hush/) · [Case study](https://jimmerioles.github.io/hush/case-study.html)
+<div align="center">
 
 https://github.com/user-attachments/assets/60dc4c72-28aa-426f-95ef-373d23f951a4
+
+[![Tests](https://github.com/jimmerioles/hush/actions/workflows/test.yml/badge.svg)](https://github.com/jimmerioles/hush/actions/workflows/test.yml) [![Deploy to GitHub Pages](https://github.com/jimmerioles/hush/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/jimmerioles/hush/actions/workflows/deploy-pages.yml)
+
+**Live demo:** https://jimmerioles.github.io/hush/
+
+**Case study:** https://jimmerioles.github.io/hush/case-study.html
+
+</div>
+
+# Hush
+
+**A focus instrument you hold.**
 
 Hush is a one-screen prototype about attention. Eight notifications drift around a grainy orb. Hold `Space` and they spiral in, the static clears, and a twelve-second ring fills; let go early and the noise rushes back. It is a design study in making focus feel physical, not a productivity app.
 
