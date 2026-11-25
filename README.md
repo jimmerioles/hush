@@ -31,7 +31,7 @@ Node 20 or newer. No environment variables or services.
 
 ## Use it
 
-Hold `Space` (or `Enter`), or press and hold the keycap. The ring takes twelve seconds. Release early and the noise returns in about 1.2 seconds. Press `Go again` to reset. The header toggle mutes the audio and remembers the choice.
+Hold `Space`, `Enter`, or the keycap. The ring takes twelve seconds. Release early and the noise returns in about 1.2 seconds. Press `Go again` to reset. The header toggle mutes the audio and remembers the choice.
 
 ## How it works
 
@@ -39,7 +39,7 @@ One number, `progress`, runs the page. It climbs at `1 / 12` per second while yo
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the state machine, chip math, audio graph, and test hook.
 
-The 3:14 hero film is built from real captures of this prototype. [Chapters, script, and rebuild notes](docs/explainer/README.md) live in `docs/explainer/`.
+The 3:14 hero film is built from real captures of this prototype. Read the [chapters, script, and rebuild notes](docs/explainer/README.md).
 
 ## Limits
 
