@@ -1,82 +1,56 @@
-# Hush — a focus instrument (prototype)
+# Hush
 
-**Live demo:** https://jimmerioles.github.io/hush/
+A focus instrument you hold.
 
-![Hush idle](docs/idle.webp)
+[Live demo](https://jimmerioles.github.io/hush/)
 
-Hush is a one-screen interactive hero: a grainy orb, a swarm of notifications, and one gesture.
+https://github.com/user-attachments/assets/59eeabfe-e322-4d30-9455-08e6ea30fa29
 
-**Hold `Space`** (or press and hold the keycap). Time slows, the notifications spiral into the orb, the static resolves, and a ring fills. Let go early and the noise rushes back. Hold for twelve seconds and the page blooms into quiet.
+Hush is a one-screen prototype about attention. Eight notifications drift around a grainy orb. Hold `Space` and they spiral in, the static clears, and a twelve-second ring fills; let go early and the noise rushes back. It is a design study in making focus feel physical, not a productivity app.
 
-The interaction is the product demo: focus is not a toggle, it is something you hold.
+## What it does
 
-![Hush focusing](docs/focus.webp)
-
-## The explainer
-
-[![Hush, explained: a 3:14 film about holding focus](docs/explainer/poster-watch.jpg)](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4)
-
-**3:14 · 1920 × 1080 · narrated by Kokoro `af_heart`**
-
-A ten-chapter film in the 3Blue1Brown style: one held key, eight notifications, twelve seconds, and the 1.18-second leak that makes the gesture mean something. Every frame uses real captures of this prototype and the actual constants in `src/main.ts` and `src/audio.ts`.
-
-[Watch the film](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4) · [Chapters and credits](docs/explainer/README.md)
+- Hold `Space`, `Enter`, or the keycap for twelve seconds to finish.
+- Eight notification chips orbit on their own paths, get absorbed one by one, and respawn.
+- A Canvas 2D orb built from procedural grain resolves into a mint glow as focus rises.
+- A progress ring, absorption particles, ambient dust, and a bloom on completion.
+- Copy shifts from "Stay with it" to "Almost quiet" to "Don't let go" before the page lands on "It's quiet now."
+- A synthesized soundscape of drone, air, chimes, and a bloom chord. It starts only on your gesture, and the header has a mute toggle.
+- Reduced motion, a phone layout with fewer chips, and a deterministic `?test` hook for captures.
 
 ## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev      # http://127.0.0.1:5173
+npm run build    # typecheck and build
+npm run preview  # preview the built site
 ```
 
-Open the URL Vite prints (defaults to `http://127.0.0.1:5173`). Build with `npm run build`.
+Node 20 or newer. No environment variables or services.
 
-## What is implemented
+## Use it
 
-- A static-first page: headline, copy, notification chips, keycap, footer.
-- A Canvas 2D orb with a procedurally generated noise texture that resolves as focus increases.
-- Notification chips that orbit the orb, spiral inward under focus, get absorbed, and respawn.
-- A 12-second hold arc with three copy beats: "Stay with it." → "Almost quiet." → "Don't let go." → "It's quiet now."
-- A progress ring, absorption particles, ambient dust, and a bloom burst.
-- A small synthesized soundscape: a low ambient drone, filtered air, soft absorption chimes, and a bloom chord. It only starts on a user gesture. The header has a mute toggle.
-- Reduced-motion support: a static orb, no particles, and a simpler bloom.
-- Responsive layout: fewer chips and a smaller stage on phones.
-- A dev-only `?test` hook for driving the state without relying on the display refresh rate.
-
-![Hush quiet](docs/quiet.webp)
+Hold `Space` (or `Enter`), or press and hold the keycap. The ring takes twelve seconds. Release early and the noise returns in about 1.2 seconds. Press `Go again` to reset. The header toggle mutes the audio and remembers the choice.
 
 ## How it works
 
-- `src/main.ts` owns the state machine (`idle → focusing → done`), the canvas scene, the chip physics, the particle system, and the copy changes.
-- `src/audio.ts` is a tiny Web Audio graph: three detuned sine oscillators through a lowpass, a filtered noise layer, a master bus with a compressor, and synthesized chimes/chord. No audio files.
-- `src/style.css` is hand-written: a dark stage, a four-layer keycap, glassy notification chips, and responsive rules.
+One number, `progress`, runs the page. It climbs at `1 / 12` per second while you hold and drains at `0.85` per second when you let go. The orb, chip orbits, ring, copy, and audio all read from it, so the interaction stays one instrument instead of a stack of effects.
 
-The orb is drawn in CSS pixels on a DPR-scaled canvas. The noise texture is a 256×256 random grayscale image drawn inside a circular clip; its alpha falls as focus rises, while a mint radial gradient takes over. The chips are DOM elements positioned with transforms, so their labels stay crisp.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the state machine, chip math, audio graph, and test hook. The 3:14 hero film is built from real captures; its [chapters and rebuild notes](docs/explainer/README.md) are separate.
 
-## Dev hook
+## Limits
 
-Append `?test` to the URL to enable:
+- The twelve-second hold is a demo, not a session timer. There is no 25-minute mode yet.
+- Notifications are staged in the page. Nothing connects to a real inbox or browser API.
+- No accounts, sync, or settings beyond the mute preference.
 
-```js
-document.dispatchEvent(new CustomEvent("hush:start"));
-document.dispatchEvent(new CustomEvent("hush:step", { detail: { seconds: 1 / 60, count: 300 } }));
-document.dispatchEvent(new CustomEvent("hush:end"));
-document.dispatchEvent(new CustomEvent("hush:reset"));
-```
+## Tests
 
-`hush:step` advances the simulation deterministically. It is useful for screenshots and for testing the full arc when the tab is in the background.
+Tests: no automated suite yet. `npm run build` typechecks the app, and the `?test` hook replays the full arc deterministically for screenshots and manual checks.
 
-## Next steps
+## Credits
 
-- Wire the 12-second demo to a real 25-minute timer, with a pause/resume state.
-- Add a small settings panel: session length, sound, reduced motion override.
-- Make the notifications real: browser notifications, a local API, or a demo feed.
-- Add a capture mode (`?capture`) and a poster generator.
-- Try a WebGPU orb once the 2D version feels right.
-- Add a short manifesto section and a real download/CTA.
+Built by [Jim Merioles](https://github.com/jimmerioles). The interface, canvas art, synthesized audio, and film are original work. The film was made with [explainer-kit](https://github.com/jimmerioles/explainer-kit).
 
-## Notes
-
-This is an original prototype built around a few principles: static-first, one diegetic interaction, a physical metaphor, and audio that starts only when you do. No third-party assets, audio, or code are used.
-
-The prototype lives in `hush`. The other prototypes are `morph`, `capture`, `run`, and `wave`.
+License: no public license yet, so the code and film are all rights reserved.

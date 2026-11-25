@@ -1,10 +1,12 @@
 # Hush, explained
 
-**Watch:** [hush-explained.mp4](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4) (3:14, 58 MB)
+**Watch:** [hush-explained.mp4](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4) (3:14, 78 MB)
 
 [![Hush, explained](poster-watch.jpg)](https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4)
 
 A ten-chapter film about Hush, a focus instrument you hold. It follows one held key from noise to quiet, then asks what happens when you let go.
+
+The first frame is `poster.jpg`, a 1920 by 1080 still. The master holds it for 2.5 seconds, crossfades for 0.5 seconds, then joins the film at 2.5 seconds. Audio still starts at zero, so the duration and chapter timings are unchanged.
 
 ## Chapters
 
