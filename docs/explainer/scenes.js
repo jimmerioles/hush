@@ -34,7 +34,7 @@ import {
   sceneLabel,
 } from "/kit/render/helpers.js";
 
-// ---------------------------------------------------------------- data
+// data
 
 const TAU = Math.PI * 2;
 const HOLD = 12;
@@ -70,7 +70,7 @@ const NOISE = (() => {
   return c;
 })();
 
-// ---------------------------------------------------------------- helpers
+// helpers
 
 function times(sc) {
   return sc.seg.sentences.map((s) => ({
@@ -538,7 +538,7 @@ function statCard(x, y, w, h, value, unit, note, alpha = 1, accent = C.mint) {
   ctx.restore();
 }
 
-// ---------------------------------------------------------------- 01 cold open
+// 01 cold open
 
 function intro(lt, sc) {
   const s = times(sc);
@@ -677,7 +677,7 @@ function intro(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 02 the noise
+// 02 the noise
 
 function noise(lt, sc) {
   const s = times(sc);
@@ -774,7 +774,7 @@ function noise(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 03 one gesture
+// 03 one gesture
 
 function gesture(lt, sc) {
   const s = times(sc);
@@ -901,7 +901,7 @@ function gesture(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 04 the pull
+// 04 the pull
 
 function pull(lt, sc) {
   const s = times(sc);
@@ -1088,7 +1088,7 @@ function pull(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 05 it comes back
+// 05 it comes back
 
 function returnScene(lt, sc) {
   const s = times(sc);
@@ -1318,7 +1318,7 @@ function returnScene(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 06 the static
+// 06 the static
 
 function staticScene(lt, sc) {
   const s = times(sc);
@@ -1327,7 +1327,7 @@ function staticScene(lt, sc) {
   const t3 = at(s, 2, 9.5);
   const t4 = at(s, 3, 16.1);
 
-  // --- the square and the clip
+  // the square and the clip
   const sq = 360;
   const sx = 190;
   const sy = 250;
@@ -1382,7 +1382,7 @@ function staticScene(lt, sc) {
     });
   }
 
-  // --- the split orb
+  // the split orb
   const ox = 1310;
   const oy = 450;
   const or = 230;
@@ -1458,7 +1458,7 @@ function staticScene(lt, sc) {
     });
   }
 
-  // --- alpha graph
+  // alpha graph
   const gp = smooth(span(lt, t3 - 0.3, t3 + 0.9));
   if (gp > 0) {
     const gx = 110;
@@ -1525,7 +1525,7 @@ function staticScene(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 07 the clock
+// 07 the clock
 
 function clockScene(lt, sc) {
   const s = times(sc);
@@ -1688,7 +1688,7 @@ function clockScene(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 08 the leak
+// 08 the leak
 
 function leakAt(t) {
   if (t <= 7) return t / HOLD;
@@ -1883,7 +1883,7 @@ function leakScene(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- 09 the quiet
+// 09 the quiet
 
 function quiet(lt, sc) {
   const s = times(sc);
@@ -2009,7 +2009,7 @@ function quiet(lt, sc) {
 
 }
 
-// ---------------------------------------------------------------- 10 one page
+// 10 one page
 
 function close(lt, sc) {
   const s = times(sc);
@@ -2226,7 +2226,7 @@ function close(lt, sc) {
   }
 }
 
-// ---------------------------------------------------------------- export
+// export
 
 export const SCENES = {
   intro,
