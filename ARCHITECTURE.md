@@ -1,6 +1,6 @@
 # Architecture
 
-Hush is a static Vite page with no framework, backend, or runtime media assets. This document covers the parts that are easy to lose in the main README: the state machine, rendering, chip math, audio graph, and test hook.
+The Hush instrument is a static Vite page with no framework, backend, or runtime media assets. The case study is a second entry that uses the same visual language and adds captures, a chart, and the film chapters. This document covers the parts that are easy to lose in the main README: the state machine, rendering, chip math, audio graph, and test hook.
 
 ## Files
 
@@ -10,6 +10,10 @@ Hush is a static Vite page with no framework, backend, or runtime media assets. 
 | `src/main.ts` | State machine, canvas scene, chip physics, particles, input |
 | `src/audio.ts` | Web Audio graph and synthesized cues |
 | `src/style.css` | Layout, keycap, chips, responsive rules |
+| `case-study.html` | Long-form case study page |
+| `src/case-study.ts` | Case study entry and scroll progress |
+| `src/case-study.css` | Case study layout, chart, film, responsive rules |
+| `src/case-study/assets/` | State captures, mobile shot, film poster |
 | `docs/explainer/` | Script, scenes, captures, score, poster, rebuild notes |
 
 ## State machine
@@ -84,7 +88,7 @@ Everything is synthesized in `src/audio.ts`. The context is created on the first
 
 ## Test hook
 
-Append `?test` to the URL to expose a deterministic path through the simulation. The hook sets `data-hush-test` on the document and listens for events:
+Append `?test` to the URL to expose a controlled path through the simulation. The hook sets `data-hush-test` on the document and listens for events:
 
 ```js
 document.dispatchEvent(new CustomEvent("hush:start"));
@@ -108,6 +112,6 @@ This is a capture and manual test harness, not an automated test suite.
 
 ## Build and deploy
 
-`npm run build` runs `tsc` and then `vite build`. The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` builds on Node 22 and deploys `dist` to GitHub Pages on every push to `main`.
+`npm run build` runs `tsc` and then `vite build`. The Vite config has two HTML entries: `index.html` and `case-study.html`. The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` builds on Node 22 and deploys `dist` to GitHub Pages on every push to `main`, so the case study is served at `/hush/case-study.html`.
 
 The explainer build directory is ignored by Git. The film itself lives on the [`explainer-v1` release](https://github.com/jimmerioles/hush/releases/tag/explainer-v1), not in the repository.

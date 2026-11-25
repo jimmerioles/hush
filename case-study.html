@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070708" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070708'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23f2f2ef' stroke-opacity='.65' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23b8ffcf'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="Hush is a one-screen focus instrument. This case study covers the design, the twelve-second hold, the math behind the pull, and the synthesized sound."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:title"
+      content="Hush case study: quiet takes twelve seconds."
+    />
+    <meta
+      property="og:description"
+      content="A focus instrument you hold. The design, math, sound, and limits behind Hush."
+    />
+    <meta
+      property="og:url"
+      content="https://jimmerioles.github.io/hush/case-study.html"
+    />
+    <meta
+      property="og:image"
+      content="https://jimmerioles.github.io/hush/og-case-study.jpg"
+    />
+    <meta
+      property="og:image:alt"
+      content="Poster for Hush, explained, with the quiet page framed on a dark grid and the label 12.0 seconds held."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="canonical"
+      href="https://jimmerioles.github.io/hush/case-study.html"
+    />
+    <title>Hush case study · Quiet takes twelve seconds.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="/src/case-study.ts"></script>
+  </head>
+  <body id="top">
+    <a class="cs-skip" href="#cs-main">Skip to the case study</a>
+
+    <div class="cs-grain" aria-hidden="true"></div>
+
+    <header class="cs-topbar" aria-label="Case study">
+      <div class="cs-topbar__inner cs-shell">
+        <a class="cs-brand" href="./" aria-label="Hush home">
+          <span class="cs-brand__mark" aria-hidden="true"></span>
+          <span class="cs-brand__name">Hush</span>
+          <span class="cs-brand__divider" aria-hidden="true"></span>
+          <span class="cs-brand__section">Case study</span>
+        </a>
+        <a class="cs-back" href="./">
+          <svg viewBox="0 0 16 16" class="icon" aria-hidden="true">
+            <path d="M10.5 3.5 6 8l4.5 4.5" />
+          </svg>
+          <span>Back to the instrument</span>
+        </a>
+      </div>
+      <span class="cs-progress" id="cs-progress" aria-hidden="true"></span>
+    </header>
+
+    <main id="cs-main" class="cs-main" tabindex="-1">
+      <article>
+        <header class="cs-hero">
+          <div class="cs-shell">
+            <p class="cs-kicker">
+              <span class="cs-kicker__dot" aria-hidden="true"></span>
+              Interaction design · Case study
+            </p>
+
+            <h1 class="cs-hero__title">
+              Quiet takes twelve seconds.<br />
+              <em
+                >Losing it<span class="cs-break-mobile"><br /></span> takes
+                one.</em
+              >
+            </h1>
+
+            <p class="cs-hero__lede">
+              Hush is a one-screen focus instrument. Eight notifications orbit a
+              grainy orb. Hold a key for twelve seconds and they spiral in, the
+              static clears, and the page goes quiet. Let go early and the noise
+              rushes back. It is a design study in making attention feel
+              physical, not another productivity app.
+            </p>
+
+            <div class="cs-hero__bottom">
+              <div class="cs-actions">
+                <a class="cs-button cs-button--primary" href="./">
+                  <span>Open the instrument</span>
+                  <svg viewBox="0 0 16 16" class="icon" aria-hidden="true">
+                    <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+                  </svg>
+                </a>
+                <a class="cs-button cs-button--ghost" href="#film">
+                  <span>Watch the film</span>
+                  <svg
+                    viewBox="0 0 16 16"
+                    class="icon icon--fill"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 3.8v8.4l6.2-4.2z" />
+                  </svg>
+                </a>
+              </div>
+
+              <dl class="cs-facts">
+                <div>
+                  <dt>Role</dt>
+                  <dd>Product design and frontend</dd>
+                </div>
+                <div>
+                  <dt>Stack</dt>
+                  <dd>TypeScript, Canvas 2D, Web Audio</dd>
+                </div>
+                <div>
+                  <dt>Surface</dt>
+                  <dd>One page, no runtime dependencies</dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>Prototype 01, November 2026</dd>
+                </div>
+              </dl>
+            </div>
+
+            <figure class="cs-figure cs-figure--hero">
+              <img
+                src="./src/case-study/assets/quiet-hero.webp"
+                alt="The Hush page at the end of a twelve second hold: the headline reads It&#39;s quiet now above a glowing mint orb and a completed progress ring."
+                width="1440"
+                height="900"
+                fetchpriority="high"
+              />
+              <figcaption>
+                The payoff state. Twelve seconds of holding, then the static is
+                gone.
+              </figcaption>
+            </figure>
+          </div>
+        </header>
+
+        <div class="cs-shell cs-sections">
+          <section class="cs-section" aria-labelledby="problem-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">01</span>
+              <p class="cs-kicker">The problem</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="problem-title">
+                Focus apps keep turning attention into
+                <em>another dashboard.</em>
+              </h2>
+              <p class="cs-lede">
+                Most focus tools are managers. A timer counts down. A streak
+                counts up. A blocklist decides what you cannot see. Each one asks
+                you to watch a surface that is supposed to protect you from the
+                other surfaces.
+              </p>
+              <p>
+                That is the wrong shape for the problem. A notification is not a
+                queue item. It is a small pull on your attention, and the pull is
+                what you feel. Hush starts from the feeling.
+              </p>
+
+              <ul class="cs-list">
+                <li>
+                  <strong>The timer</strong> turns focus into a number to
+                  monitor.
+                </li>
+                <li>
+                  <strong>The blocker</strong> hides the noise, but not the urge
+                  to check.
+                </li>
+                <li>
+                  <strong>The dashboard</strong> adds one more thing to maintain.
+                </li>
+              </ul>
+
+              <p>
+                Hush keeps the noise on the page. It does not hide the
+                notifications or pretend they are gone. It gives you a way to
+                pull them in, one held breath at a time.
+              </p>
+
+              <div class="cs-compare">
+                <h3>A focus timer vs. a held instrument</h3>
+                <p class="cs-compare__intro">
+                  Both promise quiet. Only one makes you feel the cost of getting
+                  there.
+                </p>
+                <table>
+                  <caption class="sr-only">
+                    A comparison of a focus timer and Hush for feedback, effort,
+                    failure, and reward
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Criterion</th>
+                      <th scope="col">A focus timer</th>
+                      <th scope="col">Hush</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Feedback</th>
+                      <td data-label="A focus timer">
+                        A number counts down on screen.
+                      </td>
+                      <td data-label="Hush">The page itself gets quieter.</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Effort</th>
+                      <td data-label="A focus timer">
+                        Start it, then try to ignore it.
+                      </td>
+                      <td data-label="Hush">
+                        Keep pressing for twelve seconds.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Failure</th>
+                      <td data-label="A focus timer">
+                        The streak breaks and the session resets.
+                      </td>
+                      <td data-label="Hush">
+                        You let go and the noise returns in about a second.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Reward</th>
+                      <td data-label="A focus timer">
+                        A completed session in a log.
+                      </td>
+                      <td data-label="Hush">
+                        A visible quiet, a chord, and a ring that closes.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="what-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">02</span>
+              <p class="cs-kicker">What it is</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="what-title">One screen. One control. <em>One number.</em></h2>
+              <p class="cs-lede">
+                The demo is an instrument, not a task manager. There is no list,
+                no settings screen, and no account. The entire interface is a
+                headline, eight notification chips, an orb, a keycap, and a
+                readout.
+              </p>
+              <p>
+                Hold Space, Enter, or the keycap. The ring fills over twelve
+                seconds. The chips are drawn inward one by one. Each one leaves a
+                burst of particles and a chime panned to the side it came from.
+                The copy moves through three beats, then the page lands on
+                &ldquo;It&#39;s quiet now.&rdquo; Press Go again and the loop
+                restarts.
+              </p>
+              <p>
+                Twelve seconds is a demo duration, chosen so the arc fits in one
+                breath and one screen recording. Eight chips are enough to feel
+                like a field instead of a list; the phone layout drops to five.
+                Neither number is a claim about the ideal session.
+              </p>
+
+              <div class="cs-states">
+                <figure class="cs-state">
+                  <img
+                    src="./src/case-study/assets/state-idle.webp"
+                    alt="The idle Hush page with eight notification chips orbiting a square of animated static inside the orb."
+                    width="1200"
+                    height="704"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <span class="cs-state__time">0.0s</span>
+                    <span class="cs-state__label">Noise</span>
+                    <span class="cs-state__note"
+                      >Eight notifications, eight orbits.</span
+                    >
+                  </figcaption>
+                </figure>
+                <figure class="cs-state">
+                  <img
+                    src="./src/case-study/assets/state-focus.webp"
+                    alt="The focusing Hush page with the ring half full and the notification chips pulled close to the orb."
+                    width="1200"
+                    height="704"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <span class="cs-state__time">4.4s</span>
+                    <span class="cs-state__label">Focus</span>
+                    <span class="cs-state__note"
+                      >The ring fills. The chips come in.</span
+                    >
+                  </figcaption>
+                </figure>
+                <figure class="cs-state">
+                  <img
+                    src="./src/case-study/assets/state-quiet.webp"
+                    alt="The quiet Hush page with the ring completed, a mint glow around the orb, and particles spreading outward."
+                    width="1200"
+                    height="704"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <span class="cs-state__time">12.0s</span>
+                    <span class="cs-state__label">Quiet</span>
+                    <span class="cs-state__note"
+                      >The static clears. The ring closes.</span
+                    >
+                  </figcaption>
+                </figure>
+              </div>
+              <p class="cs-small">
+                One hold, three states. The same page, captured through the test
+                hook.
+              </p>
+
+              <div class="cs-statement">
+                <p>
+                  Attention is not a setting.<br />
+                  <em>It is a grip.</em>
+                </p>
+              </div>
+
+              <h3 class="cs-subhead">Twelve seconds in. One and a fifth out.</h3>
+              <p>
+                Focus climbs at 1 / 12 per second while you hold. When you
+                release, progress drains at 0.85 per second. A full hold empties
+                in about 1.18 seconds. That gap is the whole argument: quiet is
+                something you keep choosing, not a state you enter once.
+              </p>
+
+              <figure class="cs-chart">
+                <div class="cs-chart__head">
+                  <p class="cs-label">One hold, then release</p>
+                  <div class="cs-chart__legend" aria-hidden="true">
+                    <span
+                      ><i class="cs-dot cs-dot--mint"></i>Focus</span
+                    >
+                    <span><i class="cs-dot cs-dot--line"></i>Progress</span>
+                  </div>
+                </div>
+                <div class="cs-chart__scroll">
+                  <svg
+                    class="cs-chart__svg cs-chart__svg--desktop"
+                    viewBox="0 0 760 320"
+                    role="img"
+                    aria-labelledby="chart-title chart-desc"
+                  >
+                    <title id="chart-title">
+                      Focus rises for twelve seconds, then drains in about 1.18
+                      seconds.
+                    </title>
+                    <desc id="chart-desc">
+                      A mint line climbs from zero at zero seconds to one at
+                      twelve seconds, then falls back to zero at 13.18 seconds.
+                    </desc>
+                    <defs>
+                      <linearGradient
+                        id="chart-fill"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0"
+                          stop-color="#b8ffcf"
+                          stop-opacity="0.22"
+                        ></stop>
+                        <stop
+                          offset="1"
+                          stop-color="#b8ffcf"
+                          stop-opacity="0"
+                        ></stop>
+                      </linearGradient>
+                    </defs>
+                    <g class="cs-chart__grid">
+                      <line x1="64" y1="24" x2="736" y2="24"></line>
+                      <line x1="64" y1="88" x2="736" y2="88"></line>
+                      <line x1="64" y1="152" x2="736" y2="152"></line>
+                      <line x1="64" y1="216" x2="736" y2="216"></line>
+                      <line x1="64" y1="280" x2="736" y2="280"></line>
+                      <line x1="64" y1="24" x2="64" y2="280"></line>
+                      <line x1="208" y1="24" x2="208" y2="280"></line>
+                      <line x1="352" y1="24" x2="352" y2="280"></line>
+                      <line x1="496" y1="24" x2="496" y2="280"></line>
+                      <line x1="640" y1="24" x2="640" y2="280"></line>
+                    </g>
+                    <path
+                      class="cs-chart__area"
+                      d="M 64 280 L 640 24 L 696 280 Z"
+                    ></path>
+                    <path
+                      class="cs-chart__line"
+                      d="M 64 280 L 640 24 L 696 280"
+                    ></path>
+                    <circle
+                      class="cs-chart__dot"
+                      cx="640"
+                      cy="24"
+                      r="4"
+                    ></circle>
+                    <circle
+                      class="cs-chart__dot"
+                      cx="696"
+                      cy="280"
+                      r="4"
+                    ></circle>
+                    <g class="cs-chart__labels">
+                      <text x="64" y="14">focus</text>
+                      <text x="64" y="302">0s</text>
+                      <text x="352" y="302" text-anchor="middle">6s</text>
+                      <text x="640" y="302" text-anchor="middle">12s</text>
+                      <text x="696" y="302" text-anchor="middle">13.18s</text>
+                    </g>
+                    <g class="cs-chart__annotations">
+                      <text x="352" y="64" text-anchor="middle">
+                        hold 12.0s
+                      </text>
+                      <text x="668" y="200">release</text>
+                      <text x="668" y="214">1.18s</text>
+                    </g>
+                  </svg>
+                  <svg
+                    class="cs-chart__svg cs-chart__svg--mobile"
+                    viewBox="0 0 360 240"
+                    role="img"
+                    aria-labelledby="chart-title-mobile chart-desc-mobile"
+                  >
+                    <title id="chart-title-mobile">
+                      Focus rises for twelve seconds, then drains in about 1.18
+                      seconds.
+                    </title>
+                    <desc id="chart-desc-mobile">
+                      A mint line climbs to the top at twelve seconds, then falls
+                      steeply back to zero at 13.18 seconds.
+                    </desc>
+                    <defs>
+                      <linearGradient
+                        id="chart-fill-mobile"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0"
+                          stop-color="#b8ffcf"
+                          stop-opacity="0.22"
+                        ></stop>
+                        <stop
+                          offset="1"
+                          stop-color="#b8ffcf"
+                          stop-opacity="0"
+                        ></stop>
+                      </linearGradient>
+                    </defs>
+                    <g class="cs-chart__grid">
+                      <line x1="28" y1="18" x2="332" y2="18"></line>
+                      <line x1="28" y1="63" x2="332" y2="63"></line>
+                      <line x1="28" y1="108" x2="332" y2="108"></line>
+                      <line x1="28" y1="153" x2="332" y2="153"></line>
+                      <line x1="28" y1="198" x2="332" y2="198"></line>
+                      <line x1="28" y1="18" x2="28" y2="198"></line>
+                      <line x1="158" y1="18" x2="158" y2="198"></line>
+                      <line x1="289" y1="18" x2="289" y2="198"></line>
+                    </g>
+                    <path
+                      class="cs-chart__area"
+                      d="M 28 198 L 289 18 L 314 198 Z"
+                    ></path>
+                    <path
+                      class="cs-chart__line"
+                      d="M 28 198 L 289 18 L 314 198"
+                    ></path>
+                    <circle
+                      class="cs-chart__dot"
+                      cx="289"
+                      cy="18"
+                      r="3.4"
+                    ></circle>
+                    <circle
+                      class="cs-chart__dot"
+                      cx="314"
+                      cy="198"
+                      r="3.4"
+                    ></circle>
+                    <g class="cs-chart__labels">
+                      <text x="28" y="10">focus</text>
+                      <text x="28" y="218">0s</text>
+                      <text x="283" y="218" text-anchor="middle">12s</text>
+                      <text x="322" y="232" text-anchor="middle">13.18s</text>
+                    </g>
+                    <g class="cs-chart__annotations">
+                      <text x="158" y="56" text-anchor="middle">
+                        hold 12.0s
+                      </text>
+                      <text x="300" y="126">release</text>
+                      <text x="300" y="139">1.18s</text>
+                    </g>
+                  </svg>
+                </div>
+                <figcaption>
+                  Fill slope 1 / 12 per second. Drain slope 0.85 per second. The
+                  difference is the interaction.
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="walkthrough-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">03</span>
+              <p class="cs-kicker">The walkthrough</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="walkthrough-title">
+                The whole arc, <em>in three minutes.</em>
+              </h2>
+              <p class="cs-lede">
+                The film follows one hold from noise to quiet, then explains the
+                machinery behind it. Every state on screen is a real capture of
+                the prototype, driven by the same test hook used for screenshots
+                and manual checks.
+              </p>
+
+              <div class="cs-film" id="film">
+                <figure class="cs-film__poster">
+                  <a
+                    class="cs-film__link"
+                    href="https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Watch Hush, explained on GitHub Releases. Three minutes and fourteen seconds."
+                  >
+                    <img
+                      src="./src/case-study/assets/film-poster.jpg"
+                      alt="Poster for Hush, explained, with the quiet page framed on a dark grid and the label 12.0 seconds held."
+                      width="1920"
+                      height="1080"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                  <figcaption>
+                    <span>3:14</span>
+                    <span>10 chapters</span>
+                    <span>78 MB</span>
+                  </figcaption>
+                </figure>
+
+                <div class="cs-film__body">
+                  <p class="cs-kicker">Hush, explained</p>
+                  <h3>A film about one held key.</h3>
+                  <p>
+                    The film is a separate artifact on the
+                    <code>explainer-v1</code> release, not in the repository.
+                    The script, scenes, captures, score metadata, poster, and
+                    golden frame are committed so the film can be rebuilt.
+                  </p>
+                  <a
+                    class="cs-button cs-button--primary"
+                    href="https://github.com/jimmerioles/hush/releases/download/explainer-v1/hush-explained.mp4"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span>Watch on GitHub</span>
+                    <svg viewBox="0 0 16 16" class="icon" aria-hidden="true">
+                      <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+                    </svg>
+                  </a>
+
+                  <ol class="cs-chapters" aria-label="Film chapters">
+                    <li>
+                      <span class="cs-chapters__time">0:00</span>
+                      <div>
+                        <h4>The hold</h4>
+                        <p>The page is loud before you touch it.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">0:22</span>
+                      <div>
+                        <h4>The noise</h4>
+                        <p>Eight chips, eight orbits, no shared clock.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">0:40</span>
+                      <div>
+                        <h4>One gesture</h4>
+                        <p>Press and hold. One state machine.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">0:55</span>
+                      <div>
+                        <h4>The pull</h4>
+                        <p>One number drives orbit, scale, and copy.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">1:15</span>
+                      <div>
+                        <h4>It comes back</h4>
+                        <p>Absorption, chime, respawn.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">1:34</span>
+                      <div>
+                        <h4>The static</h4>
+                        <p>A 256 × 256 noise square under a circular clip.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">1:53</span>
+                      <div>
+                        <h4>The clock</h4>
+                        <p>The ring and the three copy beats.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">2:12</span>
+                      <div>
+                        <h4>The leak</h4>
+                        <p>Twelve seconds to fill, about 1.18 to drain.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">2:30</span>
+                      <div>
+                        <h4>The quiet</h4>
+                        <p>
+                          120 particles, an A major bloom, reduced motion.
+                        </p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="cs-chapters__time">2:50</span>
+                      <div>
+                        <h4>One page</h4>
+                        <p>
+                          1,717 lines, four files, no image or audio assets.
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="cs-route">
+                <p class="cs-label">A 30 second route</p>
+                <ol>
+                  <li>Open the instrument.</li>
+                  <li>
+                    Hold for four seconds, then let go. The noise comes back in
+                    under half a second.
+                  </li>
+                  <li>
+                    Hold to twelve. The ring closes, the orb blooms, and the copy
+                    lands.
+                  </li>
+                  <li>Press Go again and watch the noise come back.</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="how-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">04</span>
+              <p class="cs-kicker">How it works</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="how-title">
+                Four ideas hold <em>the whole thing up.</em>
+              </h2>
+              <p class="cs-lede">
+                The instrument is four files and 1,717 lines: one page, one state
+                machine, one canvas loop, and one audio graph. There is no
+                framework, no backend, and no image or audio file in the product.
+              </p>
+
+              <ol class="cs-steps">
+                <li>
+                  <span class="cs-steps__number" aria-hidden="true">01</span>
+                  <div>
+                    <h3>One number runs the page.</h3>
+                    <p>
+                      <code>progress</code> climbs at 1 / 12 per second while you
+                      hold and drains at 0.85 per second when you let go. The
+                      orb, chips, ring, copy, and audio all read from it. A full
+                      hold empties in about 1.18 seconds, so the page can never
+                      feel like a checklist.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span class="cs-steps__number" aria-hidden="true">02</span>
+                  <div>
+                    <h3>The chips are pulled, not deleted.</h3>
+                    <p>
+                      Each chip has an angle, speed, phase, and delay. Its local
+                      progress is
+                      <code>(progress - delay) / (1 - delay)</code>, smoothed
+                      into a pull value. The orbit advances by
+                      <code>pull * 3.4</code> and the scale falls to
+                      <code>0.12</code>. A chip is absorbed only while you are
+                      still holding.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span class="cs-steps__number" aria-hidden="true">03</span>
+                  <div>
+                    <h3>The orb is a texture with a clock on it.</h3>
+                    <p>
+                      A 256 by 256 grayscale noise square is drawn under a
+                      circular clip and drifts on two sine offsets. Its alpha
+                      falls from 0.32 to about 0.048 as focus rises. A mint radial
+                      glow takes its place. The ring outside it fills from minus
+                      90 degrees.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span class="cs-steps__number" aria-hidden="true">04</span>
+                  <div>
+                    <h3>The sound is an instrument, not a soundtrack.</h3>
+                    <p>
+                      The audio context starts on the first gesture. A three
+                      oscillator drone opens through a lowpass filter, filtered
+                      air thins as focus rises, absorption chimes pick from five
+                      notes, and the bloom plays an A major chord. Nothing is
+                      sampled.
+                    </p>
+                  </div>
+                </li>
+              </ol>
+
+              <div class="cs-code">
+                <p class="cs-code__label">The core of src/main.ts</p>
+                <pre><code>const HOLD_SECONDS = 12;
+
+progress += dt / HOLD_SECONDS; // 12.0s to fill
+progress -= dt * 0.85;         // 1.18s to empty
+
+const local = clamp((progress - delay) / (1 - delay), 0, 1);
+const pull = smoothstep(local);
+orbit = angle + time * speed + pull * 3.4;
+scale = 1 - pull * 0.88;</code></pre>
+              </div>
+
+              <dl class="cs-stats">
+                <div>
+                  <dt>Hold to fill</dt>
+                  <dd>
+                    <strong>12.0s</strong>
+                    <span>1 / 12 per second</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Release to empty</dt>
+                  <dd>
+                    <strong>1.18s</strong>
+                    <span>0.85 per second</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Chips in orbit</dt>
+                  <dd>
+                    <strong>8</strong>
+                    <span>5 below 720px</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Noise texture</dt>
+                  <dd>
+                    <strong>256px</strong>
+                    <span>random grayscale</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Bloom particles</dt>
+                  <dd>
+                    <strong>120</strong>
+                    <span>skipped with reduced motion</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Image or audio assets</dt>
+                  <dd>
+                    <strong>0</strong>
+                    <span>in the instrument</span>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="sound-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">05</span>
+              <p class="cs-kicker">The sound</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="sound-title">Silence has <em>a sound.</em></h2>
+              <p class="cs-lede">
+                The soundscape follows the same progress number as the visuals.
+                It never plays on load, never loops a file, and never asks for
+                permission after you have already made a gesture.
+              </p>
+              <p>
+                Three sine oscillators at 110, 164.81, and 220 Hz are detuned by
+                -4, +3, and +6 cents. A lowpass filter moves from 340 Hz to 1240
+                Hz as focus rises. A looping filtered noise layer sits behind the
+                drone and thins out. The master runs at 0.16 into a compressor at
+                -18 dB and 4:1.
+              </p>
+
+              <div class="cs-sound">
+                <div class="cs-sound__card">
+                  <p class="cs-sound__label">Drone</p>
+                  <h3>Three detuned sines</h3>
+                  <p>110 / 164.81 / 220 Hz, held under the whole page.</p>
+                </div>
+                <div class="cs-sound__card">
+                  <p class="cs-sound__label">Air</p>
+                  <h3>Filtered noise</h3>
+                  <p>A 900 Hz bandpass layer that thins as focus rises.</p>
+                </div>
+                <div class="cs-sound__card">
+                  <p class="cs-sound__label">Chimes</p>
+                  <h3>Five notes, panned</h3>
+                  <p>523.25 to 880 Hz, placed by the chip&#39;s position.</p>
+                </div>
+                <div class="cs-sound__card">
+                  <p class="cs-sound__label">Bloom</p>
+                  <h3>An A major chord</h3>
+                  <p>220, 277.18, 329.63, and 440 Hz with a three second tail.</p>
+                </div>
+              </div>
+
+              <p>
+                Absorption chimes pan from -0.7 to 0.7 using the chip&#39;s
+                horizontal position, so the sound leans to the side the
+                notification came from. The bloom lands as four staggered sines.
+                Muting stores <code>hush-muted</code> in
+                <code>localStorage</code> and falls back to the in-page toggle
+                when storage is unavailable.
+              </p>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="loop-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">06</span>
+              <p class="cs-kicker">The loop</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="loop-title">
+                One loop, and <em>no other clock.</em>
+              </h2>
+              <p class="cs-lede">
+                The page runs a single <code>requestAnimationFrame</code> loop.
+                That is enough for drifting noise, orbiting chips, dust, the ring,
+                and the bloom, because every value is derived from progress and
+                time instead of stored per element.
+              </p>
+              <p>
+                The canvas is sized in CSS pixels multiplied by
+                <code>min(devicePixelRatio, 2)</code> and the context is scaled
+                once, so scene coordinates stay in CSS pixels. <code>dt</code> is
+                clamped to 50 ms so a background tab cannot jump the simulation.
+                A <code>ResizeObserver</code> handles layout changes, and reduced
+                motion skips dust, absorption particles, the noise texture, and
+                the 120 particle bloom.
+              </p>
+
+              <dl class="cs-stats cs-stats--four">
+                <div>
+                  <dt>Animation loop</dt>
+                  <dd>
+                    <strong>1</strong>
+                    <span>requestAnimationFrame</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Device pixel cap</dt>
+                  <dd>
+                    <strong>2x</strong>
+                    <span>CSS pixels stay the scene unit</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Delta clamp</dt>
+                  <dd>
+                    <strong>50ms</strong>
+                    <span>no tab switch jumps</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Layout reads per frame</dt>
+                  <dd>
+                    <strong>0</strong>
+                    <span>size is cached on resize</span>
+                  </dd>
+                </div>
+              </dl>
+
+              <p>
+                These are design values, not a benchmark. The project has no
+                automated performance trace yet. The target is a steady hold
+                animation on a mid-range laptop, and the limitations below say
+                what has not been measured.
+              </p>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="access-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">07</span>
+              <p class="cs-kicker">Access</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="access-title">
+                The quiet still <em>arrives.</em>
+              </h2>
+              <p class="cs-lede">
+                The interaction has three input paths and several ways to stop.
+                The visual result is optional, but the state change is not.
+              </p>
+
+              <ul class="cs-list cs-list--tight">
+                <li>
+                  <strong>Keyboard and pointer.</strong> Space, Enter, and the
+                  keycap all start a hold. Pointer capture keeps a drag from
+                  escaping. Window blur, tab hide, pointer up, and pointer cancel
+                  all end it.
+                </li>
+                <li>
+                  <strong>Reduced motion.</strong> The noise texture, dust,
+                  absorption particles, bloom burst, and long transitions are
+                  skipped. The ring still fills, and the quiet still arrives.
+                </li>
+                <li>
+                  <strong>Sound is opt in.</strong> The audio context is created
+                  only on a gesture. The header toggle has
+                  <code>aria-pressed</code>, and the preference survives a
+                  reload.
+                </li>
+                <li>
+                  <strong>Focus stays visible.</strong> Every control has a
+                  visible focus ring. Interactive elements are ignored by the
+                  hold handler, so links and buttons keep working during the
+                  page&#39;s keyboard listener.
+                </li>
+                <li>
+                  <strong>The limit is the readout.</strong> The progress ring
+                  and copy beats are visual. A screen reader can read the page
+                  and operate the controls, but it does not hear the ring fill.
+                  A future version should announce the three copy beats at
+                  meaningful thresholds.
+                </li>
+              </ul>
+
+              <p>
+                The page uses one heading, semantic landmarks, a skip link on
+                this case study, and no meaning that depends on color alone. The
+                keycap exposes <code>aria-pressed</code> while held, and the
+                readout stays out of the live region on purpose: a timer that
+                speaks every tenth of a second would break the quiet it is
+                describing.
+              </p>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="limits-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">08</span>
+              <p class="cs-kicker">Limits</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="limits-title">What this <em>does not claim.</em></h2>
+              <p class="cs-lede">
+                A demo is more convincing when it says where the edges are. These
+                are the current ones.
+              </p>
+
+              <div class="cs-cols">
+                <ul class="cs-list cs-list--tight">
+                  <li>
+                    The twelve second hold is a demo, not a session timer. There
+                    is no 25 minute mode yet.
+                  </li>
+                  <li>
+                    Notifications are staged in the page. Nothing connects to an
+                    inbox, a browser API, or the operating system.
+                  </li>
+                  <li>
+                    There is no account, sync, or settings beyond the mute
+                    preference.
+                  </li>
+                  <li>
+                    There is no automated test suite.
+                    <code>npm run build</code> typechecks the app, and the
+                    <code>?test</code> hook steps the arc on demand for captures
+                    and manual checks.
+                  </li>
+                  <li>
+                    There is no published frame trace. The performance values are
+                    design targets, not a benchmark.
+                  </li>
+                  <li>
+                    The progress ring is visual. Screen reader users do not hear
+                    it fill.
+                  </li>
+                  <li>
+                    The phone layout drops from eight chips to five and shortens
+                    the stage. Touch works, but the hold is the only gesture.
+                  </li>
+                  <li>
+                    The sound is mixed for the demo. There is no device
+                    calibration, 3D audio, or haptics.
+                  </li>
+                  <li>
+                    The film is a separate artifact on GitHub Releases. It is not
+                    embedded in the product.
+                  </li>
+                </ul>
+
+                <figure class="cs-figure cs-figure--mobile">
+                  <img
+                    src="./src/case-study/assets/mobile-idle.webp"
+                    alt="Hush at 390 pixels wide, with a shorter stage, five notification chips, and the keycap below the orb."
+                    width="780"
+                    height="1688"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    At 390px, the stage shortens and the orbit drops from eight
+                    chips to five.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="next-title">
+            <div class="cs-section__aside">
+              <span class="cs-section__number">09</span>
+              <p class="cs-kicker">What is next</p>
+            </div>
+            <div class="cs-section__body">
+              <h2 id="next-title">
+                Make the hold mean something
+                <em>outside the demo.</em>
+              </h2>
+              <p class="cs-lede">
+                The interaction has proven the feeling. The remaining work is
+                duration, real inputs, and evidence.
+              </p>
+
+              <ol class="cs-next">
+                <li>
+                  <span aria-hidden="true">01</span>
+                  <div>
+                    <h3>A 25 minute mode</h3>
+                    <p>
+                      Keep the twelve second hold as the way in, then let the
+                      quiet extend into a real session without turning it into a
+                      countdown.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span aria-hidden="true">02</span>
+                  <div>
+                    <h3>One real inbox adapter</h3>
+                    <p>
+                      Let a single provider feed the chips with local previews.
+                      No feed, no algorithm, no unread count arms race.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span aria-hidden="true">03</span>
+                  <div>
+                    <h3>A local session log</h3>
+                    <p>
+                      Show the last seven holds as a small history, not a streak.
+                      The point is the feeling, not the score.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span aria-hidden="true">04</span>
+                  <div>
+                    <h3>A stronger accessible mode</h3>
+                    <p>
+                      Announce the three copy beats at meaningful thresholds and
+                      add haptics on mobile.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span aria-hidden="true">05</span>
+                  <div>
+                    <h3>A small user study</h3>
+                    <p>
+                      Measure whether the drain changes how long people hold,
+                      without adding points or badges.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <span aria-hidden="true">06</span>
+                  <div>
+                    <h3>A second instrument</h3>
+                    <p>
+                      Run the same progress model through a different task:
+                      breathing, reading, or a single timed sprint.
+                    </p>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <footer class="cs-footer">
+      <div class="cs-shell cs-footer__inner">
+        <div>
+          <p class="cs-footer__mark">
+            <span class="cs-brand__mark" aria-hidden="true"></span>
+            Hush
+          </p>
+          <p class="cs-footer__note">
+            Case study by
+            <a href="https://github.com/jimmerioles">Jim Merioles</a>. A
+            prototype, not a product. The notifications are staged. The
+            instrument is built with TypeScript, Canvas 2D, and Web Audio. The
+            film was made with
+            <a href="https://github.com/jimmerioles/explainer-kit">explainer-kit</a>.
+          </p>
+        </div>
+        <div class="cs-footer__links">
+          <a class="cs-back" href="./">
+            <svg viewBox="0 0 16 16" class="icon" aria-hidden="true">
+              <path d="M10.5 3.5 6 8l4.5 4.5" />
+            </svg>
+            <span>Back to the instrument</span>
+          </a>
+          <a
+            class="cs-small"
+            href="https://github.com/jimmerioles/hush"
+            target="_blank"
+            rel="noreferrer"
+            >Source on GitHub</a
+          >
+          <a class="cs-small" href="#top">Back to top</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

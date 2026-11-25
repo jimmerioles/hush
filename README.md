@@ -2,7 +2,7 @@
 
 A focus instrument you hold.
 
-[Live demo](https://jimmerioles.github.io/hush/)
+[Live demo](https://jimmerioles.github.io/hush/) · [Case study](https://jimmerioles.github.io/hush/case-study.html)
 
 https://github.com/user-attachments/assets/60dc4c72-28aa-426f-95ef-373d23f951a4
 
@@ -16,14 +16,14 @@ Hush is a one-screen prototype about attention. Eight notifications drift around
 - A progress ring, absorption particles, ambient dust, and a bloom on completion.
 - Copy shifts from "Stay with it" to "Almost quiet" to "Don't let go" before the page lands on "It's quiet now."
 - A synthesized soundscape of drone, air, chimes, and a bloom chord. It starts only on your gesture, and the header has a mute toggle.
-- Reduced motion, a phone layout with fewer chips, and a deterministic `?test` hook for captures.
+- Reduced motion, a phone layout with fewer chips, and a `?test` hook that steps the hold for captures.
 
 ## Run it
 
 ```bash
 npm install
-npm run dev      # http://127.0.0.1:5173
-npm run build    # typecheck and build
+npm run dev      # http://127.0.0.1:5173 (case study: /case-study.html)
+npm run build    # typecheck and build both pages
 npm run preview  # preview the built site
 ```
 
@@ -31,7 +31,11 @@ Node 20 or newer. No environment variables or services.
 
 ## Use it
 
-Hold `Space`, `Enter`, or the keycap. The ring takes twelve seconds. Release early and the noise returns in about 1.2 seconds. Press `Go again` to reset. The header toggle mutes the audio and remembers the choice.
+Hold `Space`, `Enter`, or the keycap. The ring takes twelve seconds. Release early and the noise returns; a full ring drains in about 1.2 seconds. Press `Go again` to reset. The header toggle mutes the audio and remembers the choice.
+
+## Case study
+
+The [case study](https://jimmerioles.github.io/hush/case-study.html) is a long-form page about the design, the twelve-second hold, the chip math, the audio graph, the film, and the current limits. It is a second Vite entry at `case-study.html`, built from the same source as the instrument.
 
 ## How it works
 
@@ -49,7 +53,7 @@ The 3:14 hero film is built from real captures of this prototype. Read the [chap
 
 ## Tests
 
-Tests: no automated suite yet. `npm run build` typechecks the app, and the `?test` hook replays the full arc deterministically for screenshots and manual checks.
+Tests: no automated suite yet. `npm run build` typechecks the instrument and the case study entry, and the `?test` hook steps the full arc on demand for screenshots and manual checks.
 
 ## Credits
 
