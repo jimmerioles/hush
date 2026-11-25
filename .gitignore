@@ -2,6 +2,8 @@ node_modules/
 dist/
 .DS_Store
 *.log
+test-results/
+playwright-report/
 # explainer build output and narration cache
 docs/explainer/build/
 .cache/explainer/

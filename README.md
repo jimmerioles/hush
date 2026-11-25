@@ -22,8 +22,10 @@ Hush is a one-screen prototype about attention. Eight notifications drift around
 
 ```bash
 npm install
+npx playwright install chromium  # once, for the browser tests
 npm run dev      # http://127.0.0.1:5173 (case study: /case-study.html)
 npm run build    # typecheck and build both pages
+npm test         # unit and browser tests
 npm run preview  # preview the built site
 ```
 
@@ -53,7 +55,12 @@ The 3:14 hero film is built from real captures of this prototype. Read the [chap
 
 ## Tests
 
-Tests: no automated suite yet. `npm run build` typechecks the instrument and the case study entry, and the `?test` hook steps the full arc on demand for screenshots and manual checks.
+`npm test` runs the unit suite and the browser smoke tests.
+
+- `tests/unit/simulation.test.ts` covers the pure state machine, copy bands, readout, chip motion, and absorption rules in `src/simulation.ts`.
+- `tests/e2e/hush.spec.ts` drives the `?test` hook through a full hold, an early release, the copy bands, and a reset. It also checks both pages for runtime errors and the case study progress bar for scroll tracking.
+
+Use `npm run test:unit` for the fast loop or `npm run test:e2e` for the browser layer. The first browser run needs `npx playwright install chromium`. CI runs both after the build and before deploy. `npm run build` still typechecks both entries.
 
 ## Credits
 

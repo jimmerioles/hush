@@ -1,7 +1,14 @@
 import "./style.css";
 import { AudioEngine } from "./audio.ts";
-
-type Phase = "idle" | "focusing" | "done";
+import {
+  IDLE_AT,
+  chipPose,
+  copyBand,
+  isAbsorbable,
+  readoutFor,
+  stepSimulation,
+  type SimulationState,
+} from "./simulation.ts";
 
 type StageSize = {
   w: number;
@@ -36,7 +43,6 @@ type Particle = {
   kind: ParticleKind;
 };
 
-const HOLD_SECONDS = 12;
 const MAX_CHIPS = 8;
 const TAU = Math.PI * 2;
 
@@ -72,13 +78,13 @@ const keycapHint = keycap.querySelector<HTMLElement>(".keycap-hint")!;
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const audio = new AudioEngine();
 
-const state = {
-  phase: "idle" as Phase,
+const state: SimulationState & { size: StageSize } = {
+  phase: "idle",
   progress: 0,
   holding: false,
   time: 0,
   bloom: 0,
-  size: { w: 0, h: 0, cx: 0, cy: 0, r: 0 } as StageSize,
+  size: { w: 0, h: 0, cx: 0, cy: 0, r: 0 },
 };
 
 const chips: Chip[] = [];
@@ -103,14 +109,6 @@ const CHIP_DATA = [
   { icon: "◆", label: "DM", meta: "1 unread" },
   { icon: "★", label: "Review", meta: "2 waiting" },
 ];
-
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
-
-const smoothstep = (value: number) => {
-  const t = clamp(value, 0, 1);
-  return t * t * (3 - 2 * t);
-};
 
 function makeNoise(size: number): HTMLCanvasElement {
   const noise = document.createElement("canvas");
@@ -152,7 +150,7 @@ function setIdleCopy(): void {
 }
 
 function updateFocusCopy(): void {
-  const band = state.progress < 0.34 ? 0 : state.progress < 0.7 ? 1 : 2;
+  const band = copyBand(state.progress);
   if (band === lastFocusBand) return;
   lastFocusBand = band;
 
@@ -281,8 +279,12 @@ function updateChips(): void {
   if (state.phase === "done") return;
 
   const { w, h, cx, cy, r } = state.size;
-  const rx = Math.min(w * 0.37, 360);
-  const ry = Math.min(h * 0.36, 190);
+  const stage = {
+    cx,
+    cy,
+    rx: Math.min(w * 0.37, 360),
+    ry: Math.min(h * 0.36, 190),
+  };
 
   for (const chip of chips) {
     if (chip.absorbed) {
@@ -296,25 +298,14 @@ function updateChips(): void {
       continue;
     }
 
-    const local = clamp((state.progress - chip.delay) / (1 - chip.delay), 0, 1);
-    const pull = smoothstep(local);
-    const orbit = chip.angle + state.time * chip.speed + pull * 3.4;
-    const scale = 1 - pull * 0.88;
-
-    const x =
-      cx +
-      Math.cos(orbit) * rx * scale +
-      Math.sin(state.time * 0.8 + chip.phase) * 3 * (1 - pull);
-    const y =
-      cy +
-      Math.sin(orbit) * ry * scale +
-      Math.cos(state.time * 0.95 + chip.phase) * 3 * (1 - pull);
+    const pose = chipPose(chip, state.progress, state.time, stage);
+    const { x, y, scale, local } = pose;
 
     chip.x = x;
     chip.y = y;
 
     const distance = Math.hypot(x - cx, y - cy);
-    if (state.holding && local > 0.9 && distance < r * 1.25) {
+    if (isAbsorbable(state.holding, local, distance, r)) {
       chip.absorbed = true;
       chip.el.style.opacity = "0";
       chip.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(0.4)`;
@@ -325,7 +316,7 @@ function updateChips(): void {
     }
 
     chip.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale})`;
-    chip.el.style.opacity = `${1 - pull * 0.45}`;
+    chip.el.style.opacity = `${1 - pose.pull * 0.45}`;
   }
 }
 
@@ -490,14 +481,7 @@ function render(): void {
   }
 }
 
-function startBloom(): void {
-  if (state.phase === "done") return;
-
-  state.phase = "done";
-  state.progress = 1;
-  state.holding = false;
-  state.bloom = reduced ? 4 : 0;
-
+function enterDone(): void {
   keycap.toggleAttribute("data-pressed", false);
   keycap.setAttribute("aria-pressed", "false");
   keycap.dataset.done = "true";
@@ -507,7 +491,7 @@ function startBloom(): void {
 
   setCopy("It's <em>quiet</em> now.", "That's what focus feels like. Go again?");
   setOrbState("quiet");
-  readout.textContent = HOLD_SECONDS.toFixed(1);
+  readout.textContent = readoutFor(1);
   audio.bloom();
 
   for (const chip of chips) {
@@ -594,26 +578,23 @@ function endHold(): void {
 }
 
 function update(dt: number): void {
-  state.time += dt;
+  const { completed, phaseBefore } = stepSimulation(state, dt, reduced);
 
-  if (state.phase === "focusing") {
-    state.progress = Math.min(1, state.progress + dt / HOLD_SECONDS);
+  if (phaseBefore === "focusing") {
     audio.setFocus(state.progress);
-    updateFocusCopy();
-    if (state.progress >= 0.9999) startBloom();
+    if (!completed) updateFocusCopy();
   } else if (state.phase === "idle") {
-    state.progress = Math.max(0, state.progress - dt * 0.85);
     audio.setFocus(state.progress);
-    if (state.progress <= 0.001) setIdleCopy();
-  } else if (state.phase === "done") {
-    state.bloom += dt;
+    if (state.progress <= IDLE_AT) setIdleCopy();
   }
+
+  if (completed) enterDone();
 
   updateChips();
   updateParticles(dt);
   spawnDust(dt);
 
-  readout.textContent = (state.progress * HOLD_SECONDS).toFixed(1);
+  readout.textContent = readoutFor(state.progress);
 }
 
 function applyMuted(): void {

@@ -7,23 +7,26 @@ The Hush instrument is a static Vite page with no framework, backend, or runtime
 | File | Role |
 | --- | --- |
 | `index.html` | Static shell: headline, stage, keycap, readout, footer |
-| `src/main.ts` | State machine, canvas scene, chip physics, particles, input |
+| `src/main.ts` | DOM, canvas scene, particles, input, and the frame loop |
+| `src/simulation.ts` | Pure state machine, copy bands, chip math, and absorption rules |
 | `src/audio.ts` | Web Audio graph and synthesized cues |
 | `src/style.css` | Layout, keycap, chips, responsive rules |
 | `case-study.html` | Long-form case study page |
 | `src/case-study.ts` | Case study entry and scroll progress |
 | `src/case-study.css` | Case study layout, chart, film, responsive rules |
 | `src/case-study/assets/` | State captures, mobile shot, film poster |
+| `tests/unit/` | Vitest coverage for `src/simulation.ts` |
+| `tests/e2e/` | Playwright smoke tests for both pages |
 | `docs/explainer/` | Script, scenes, captures, score, poster, rebuild notes |
 
 ## State machine
 
-The app has three phases: `idle`, `focusing`, and `done`.
+The app has three phases: `idle`, `focusing`, and `done`. The numbers live in `src/simulation.ts`, with no DOM, canvas, or audio imports, so they can be tested in Node.
 
 - `beginHold` switches to `focusing`, starts the audio context, and resets the copy band.
 - While focusing, `progress` climbs by `dt / 12`.
 - While idle, `progress` drains by `dt * 0.85`. A full hold therefore empties in about 1.18 seconds.
-- When `progress` reaches 1, `startBloom` switches to `done`, absorbs every chip, plays the bloom chord, and spawns 120 bloom particles.
+- When `progress` reaches the 0.9999 completion threshold, `complete` switches to `done`, absorbs every chip, plays the bloom chord, and spawns 120 bloom particles.
 - `reset` returns to `idle`, rebuilds the chips, and clears the particles.
 - `dt` is clamped to 50 ms so a background tab does not jump the simulation.
 
@@ -68,7 +71,7 @@ orbit = angle + time * speed + pull * 3.4
 scale = 1 - pull * 0.88
 ```
 
-The orbit ellipse is `min(stageWidth * 0.37, 360)` by `min(stageHeight * 0.36, 190)`. A small independent sine wobble fades as `pull` rises.
+The orbit ellipse is `min(stageWidth * 0.37, 360)` by `min(stageHeight * 0.36, 190)`. A small independent sine wobble fades as `pull` rises. `chipLocal`, `chipPose`, and `isAbsorbable` in `src/simulation.ts` own this math; `updateChips` only applies the result to the DOM.
 
 A chip is absorbed when the user is still holding, `local > 0.9`, and its distance to the center is below `r * 1.25`. It fades out, emits particles, plays a chime panned by its horizontal position, and respawns 1.2 to 2.8 seconds later.
 
@@ -108,10 +111,10 @@ __hush.state();
 __hush.reset();
 ```
 
-This is a capture and manual test harness, not an automated test suite.
+This is a capture and manual test harness. The Playwright smoke tests also drive it, so a full hold, an early release, and a reset stay covered without a screenshot suite.
 
 ## Build and deploy
 
-`npm run build` runs `tsc` and then `vite build`. The Vite config has two HTML entries: `index.html` and `case-study.html`. The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` builds on Node 22 and deploys `dist` to GitHub Pages on every push to `main`, so the case study is served at `/hush/case-study.html`.
+`npm run build` runs `tsc` and then `vite build`. The Vite config has two HTML entries: `index.html` and `case-study.html`. `npm test` runs the Vitest unit suite and the Playwright browser tests. The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` builds on Node 22, installs Chromium, runs both suites, and deploys `dist` to GitHub Pages on every push to `main`, so the case study is served at `/hush/case-study.html`.
 
 The explainer build directory is ignored by Git. The film itself lives on the [`explainer-v1` release](https://github.com/jimmerioles/hush/releases/tag/explainer-v1), not in the repository.
