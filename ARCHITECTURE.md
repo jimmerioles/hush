@@ -48,7 +48,7 @@ Particles:
 
 - Ambient dust spawns every 0.14 seconds and drifts upward.
 - Each absorbed chip emits 14 particles that accelerate toward the orb center.
-- The done state emits 120 particles outward with gravity and fade.
+- The done state emits 120 particles outward with drag and fade.
 - Reduced motion skips dust, absorption particles, the noise texture, and the bloom burst.
 
 ## Chips
@@ -108,6 +108,6 @@ This is a capture and manual test harness, not an automated test suite.
 
 ## Build and deploy
 
-`npm run build` runs `tsc` and then `vite build`. The GitHub Actions workflow in `.github/workflows/deploy.yml` builds on Node 22 and deploys `dist` to GitHub Pages on every push to `main`.
+`npm run build` runs `tsc` and then `vite build`. The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` builds on Node 22 and deploys `dist` to GitHub Pages on every push to `main`.
 
 The explainer build directory is ignored by Git. The film itself lives on the [`explainer-v1` release](https://github.com/jimmerioles/hush/releases/tag/explainer-v1), not in the repository.
