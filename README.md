@@ -37,7 +37,9 @@ Hold `Space` (or `Enter`), or press and hold the keycap. The ring takes twelve s
 
 One number, `progress`, runs the page. It climbs at `1 / 12` per second while you hold and drains at `0.85` per second when you let go. The orb, chip orbits, ring, copy, and audio all read from it, so the interaction stays one instrument instead of a stack of effects.
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the state machine, chip math, audio graph, and test hook. The 3:14 hero film is built from real captures; its [chapters and rebuild notes](docs/explainer/README.md) are separate.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the state machine, chip math, audio graph, and test hook.
+
+The 3:14 hero film is built from real captures of this prototype. [Chapters, script, and rebuild notes](docs/explainer/README.md) live in `docs/explainer/`.
 
 ## Limits
 
