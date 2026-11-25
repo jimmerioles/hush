@@ -4,7 +4,7 @@ A focus instrument you hold.
 
 [Live demo](https://jimmerioles.github.io/hush/)
 
-https://github.com/user-attachments/assets/66069c16-a3de-46b3-8783-ba2853769176
+https://github.com/user-attachments/assets/60dc4c72-28aa-426f-95ef-373d23f951a4
 
 Hush is a one-screen prototype about attention. Eight notifications drift around a grainy orb. Hold `Space` and they spiral in, the static clears, and a twelve-second ring fills; let go early and the noise rushes back. It is a design study in making focus feel physical, not a productivity app.
 
